@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Duduksini's boardgame, user, and collection database on Elasticache's Redis
+Parameters:
+  PathToSeed:
+    Type: String
+    Default: duduksini/redis/seed/dump.rdb
+Resources:
+  CacheCluster:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: !Ref AWS::StackName
+      Engine: redis
+      EngineVersion: 3.2.4
+      Port: 6379      
+      CacheNodeType : cache.t2.micro
+      NumNodeGroups: 1
+      ReplicasPerNodeGroup : 0
+      NodeGroupConfiguration:
+      # elasticache redis has 16384 slots, we have only 1 shard
+        - Slots: 0,0-16383
+      SnapshotArns:
+        - !Sub arn:aws:s3:::${PathToSeed}
+      SnapshotRetentionLimit: 1
+      CacheSubnetGroupName: !Ref CacheSubnetGroup
+      SecurityGroupIds:
+        - !ImportValue vpc-DefaultSecurityGroup
+      CacheParameterGroupName: default.redis3.2.cluster.on
+  CacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: !Sub ${AWS::StackName}-CacheSubnetGroup
+      SubnetIds:
+        - !ImportValue vpc-SubnetPublicA
+        - !ImportValue vpc-SubnetPublicB
+Outputs:
+  CacheClusterUrl:
+    Description: URL for the CacheCluster.
+    Value: !GetAtt CacheCluster.ConfigurationEndPoint.Address
+    Export:
+      Name: !Sub ${AWS::StackName}-EndPointAddress
