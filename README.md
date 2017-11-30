@@ -1,5 +1,5 @@
 # duduksini-redis
-This is a redis .rdb seed/backup for boardgame-api, collection-api, and user-api. Everything shares database 0 under different namespaces, for cost reason.
+This is a redis .rdb seed/backup for [boardgame-api](https://github.com/duduksini/boardgame-api), [collection-api](https://github.com/duduksini/collection-api), and [user-api](https://github.com/duduksini/user-api). Everything shares database 0 under different namespaces, for cost reason.
 
 ## Running locally
 ### Install docker and share your drive. Then run:
