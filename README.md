@@ -14,4 +14,5 @@ docker exec -it duduksini-redis redis-cli keys '*'
 ## Deploying to AWS ElastiCache
 1. Make sure aws cli is configured with access and secret key
 2. Create an [s3 bucket for the seed .rdb](https://github.com/duduksini/s3)
-3. Run deploy.sh inside `/aws` folder
+3. Create [VPCs and export the ids as cloudformation output](https://github.com/duduksini/vpc)
+4. Run deploy.sh inside `/aws` folder
